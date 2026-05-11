@@ -8,9 +8,9 @@ const EASE = [0.76, 0, 0.24, 1] as const;
 
 const CREW_IMAGES = [
   '/crewimage-1.jpg',
-  '/cut-2.jpg',
-  '/cut-4.jpg',
   '/crewimage-1.jpg',
+  '/crewimage-2.jpg',
+  '/crewimage-3.jpg',
 ];
 
 export default function CrewSection() {
