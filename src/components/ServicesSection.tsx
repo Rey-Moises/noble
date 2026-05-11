@@ -6,24 +6,9 @@ import ScrambleHeading from './ScrambleHeading';
 const EASE = [0.76, 0, 0.24, 1] as const;
 
 const SERVICES = [
-  {
-    name: 'Haircut',
-    price: '₱200',
-    duration: '1 hr',
-    image: 'https://lh3.googleusercontent.com/aida/ADBb0uiyXvPfTjB1-F4j-0LTmCwMrx4UVLb6M5kLCbIz6l_Ucrt6u3oWUhX7kYF3rL8gIld5UX5n_g4AmGi6oWySQ6tIcabat6E4xR3y94ESw0BAIs6Fno6rQi9x3BrN-thmIFGXaS1mdCe67tt1W0pdT27HAgmLFkLOxwG_6Qxmf4levFVctmD2Q3GHjhpGSys2qBp8qjt0mxK5IXET3WHLTxcwGLZiCd-up--R5d5TGpDB626NaOGpkY-kg1boVPJqyi3fcnqwWbjeJQ',
-  },
-  {
-    name: 'Shave / Beard Trim',
-    price: '₱100',
-    duration: '30 mins',
-    image: 'https://lh3.googleusercontent.com/aida/ADBb0uhOXEh5UZwsYB6gzRE2vS57SZLAwYRnB4SHANrVPcpRMZPRKpJLhXfuCYLJHIYwHs3zVS5_YWkW6kfXPZ1ms6WzcfEZXTaekKHGtPVQHuwS1XVXgOIB632p8_bzJ1w1IBbcyyAYFzDfr2mcIl77eRBuRSvKTj7avlrcQJ-8x-p5gxjdDd669sgMT4PSWOp57bAUCFZg_f91UBUrUB1v_onS81RPEwVuOkr6Go7B6Eau38sH8oH78XlKimU-WVcW2UANk6DBvLSnYg',
-  },
-  {
-    name: 'Haircut & Shave',
-    price: '₱300',
-    duration: '1 hr 30 mins',
-    image: 'https://lh3.googleusercontent.com/aida/ADBb0uiQSSk0v9mWEOj0VBAN6ujPCDSyiMiFs1KwdPmFzMz_lPJE6kvvxizsg7ehzKoSdUUIqF_Hj1fpEv_y0D1el5ifuotXvcGXeOfMnsU6QnuXgQTNvcyOq_ASn0VvEvhklLrWi6ILY67DNJ0TxDlCHiYD_rprZ8LJL42Ay9NVbBKx0wdGRRJpSZyf0EZcE3vfIlB4Iqp9S3CrPlRa9rFp6x52qly3K55XgHPYmWG7J1bMjDxRoCRYkBGpeUjJnzBxCIjAMflVqWxT',
-  },
+  { name: 'Haircut',          price: '₱200', duration: '1 hr',          image: '/cut-1.jpg' },
+  { name: 'Shave / Beard Trim', price: '₱100', duration: '30 mins',     image: '/cut-3.jpg' },
+  { name: 'Haircut & Shave',  price: '₱300', duration: '1 hr 30 mins',  image: '/cut-5.jpg' },
 ];
 
 export default function ServicesSection() {

@@ -7,10 +7,10 @@ import CursorFollower from './CursorFollower';
 const EASE = [0.76, 0, 0.24, 1] as const;
 
 const CREW_IMAGES = [
-  'https://lh3.googleusercontent.com/aida/ADBb0ughMXiCaQq7GNpi-TpbX-B3O0S4244B_loykgY9xyFn5eBdTk1UTc1kj9HhEZG-tJhSydtDGTerEGxW-0ehrwn_4-4uNb6wz0iN-XAzmnyBsFyiut6mkSeG2tMAYrVr1Umuz2VIOvEOz0lbTdjCcbwam57Lz3zVI6eWrp6-u7o_5ZISDrUkD7X0N0ubAPx4htoOSIQ2qHgTIoYvNMFRfJsbEMCAXNFohLm4OvGX0S0ou0Au2NcvAqJvZkgsP2aM4qTdJFPGKjHFMQ',
-  'https://lh3.googleusercontent.com/aida/ADBb0uiQSSk0v9mWEOj0VBAN6ujPCDSyiMiFs1KwdPmFzMz_lPJE6kvvxizsg7ehzKoSdUUIqF_Hj1fpEv_y0D1el5ifuotXvcGXeOfMnsU6QnuXgQTNvcyOq_ASn0VvEvhklLrWi6ILY67DNJ0TxDlCHiYD_rprZ8LJL42Ay9NVbBKx0wdGRRJpSZyf0EZcE3vfIlB4Iqp9S3CrPlRa9rFp6x52qly3K55XgHPYmWG7J1bMjDxRoCRYkBGpeUjJnzBxCIjAMflVqWxT',
-  'https://lh3.googleusercontent.com/aida/ADBb0uhOXEh5UZwsYB6gzRE2vS57SZLAwYRnB4SHANrVPcpRMZPRKpJLhXfuCYLJHIYwHs3zVS5_YWkW6kfXPZ1ms6WzcfEZXTaekKHGtPVQHuwS1XVXgOIB632p8_bzJ1w1IBbcyyAYFzDfr2mcIl77eRBuRSvKTj7avlrcQJ-8x-p5gxjdDd669sgMT4PSWOp57bAUCFZg_f91UBUrUB1v_onS81RPEwVuOkr6Go7B6Eau38sH8oH78XlKimU-WVcW2UANk6DBvLSnYg',
-  'https://lh3.googleusercontent.com/aida/ADBb0uiY8ecdMdJfYQ4DiGJB1K2Th1CZse3V9rVyW7O13xL3FbX7C0jpsAfut-5D9dCzd1ibBp_5rkBFPGUsKOsfvgDdQbLZ_rB70C1Z5077IiuVsRKJYpVbdN8yPp_JzPzEhcYy3AdnvIZ3xn4DzR6uyIIQLi0n6-BhlDNBXmXH1ElTLY1rdqDWKpZc1KkxwzewKWMQZcCQQRTy9o5oSGFt9vOxMm0yuV6zpyzUGPWZMv_YjPhDwGieszoAqV5SlaKR47D2LzCOOLTXjw',
+  '/crewimage-1.jpg',
+  '/cut-2.jpg',
+  '/cut-4.jpg',
+  '/crewimage-1.jpg',
 ];
 
 export default function CrewSection() {
