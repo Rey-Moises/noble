@@ -1,6 +1,0 @@
-# wrangler.toml
-name = "noble-barbers"
-compatibility_date = "2024-05-11"
-
-[assets]
-directory = "dist"
