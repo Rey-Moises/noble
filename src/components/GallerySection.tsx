@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'motion/react';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import ScrambleHeading from './ScrambleHeading';
 
 const EASE = [0.76, 0, 0.24, 1] as const;
@@ -12,40 +12,61 @@ const GALLERY_IMAGES = [
   { url: 'https://lh3.googleusercontent.com/aida/ADBb0ugzmTOHKH8YDMN6XaQ4ZXaCe61q-1EBV0cquUcPK_hzgOLHA4bF4l5O_ZwxHGyFl4R-NHimsP-wugPVdQUvBTcxrdcBfhB_JBrzdJ474k9rVNgH1g6AG41QUEIgIqokDzQ5mA_Y9bSCJYQGXOyXThZ_voVrSPoWEGBi271YmZ7iMmBtP80vBnO8OxHRXGgau-xUcAjRcrxZuUd8_16YazmPO7faZ2OOFwH7Ydq3fPAfD_3mclJTDxp1df6s_ePrNP8_gvUYpyhe', label: 'Signature Texture' },
 ];
 
-function RevealImage({ src, alt, label, index, className, ...rest }: {
+function RevealImage({ src, alt, label, index, className }: {
   src: string; alt: string; label: string; index: number; className?: string;
-} & Record<string, unknown>) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+}) {
+  // Touch-tap toggle: replaces CSS :hover for touch devices
+  const [active, setActive] = useState(false);
 
   return (
     <motion.div
-      ref={ref}
-      className={`overflow-hidden bg-bg-surface relative group ${className ?? ''}`}
+      className={`overflow-hidden bg-bg-surface relative group cursor-pointer ${className ?? ''}`}
       initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
-      animate={inView ? { clipPath: 'inset(0% 0% 0% 0%)' } : {}}
-      transition={{ duration: 1.2, ease: EASE, delay: index * 0.1 }}
+      whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+      // Positive margin = start animating before element enters viewport
+      // so images never appear stuck/invisible on mobile
+      viewport={{ once: true, margin: '120px' }}
+      transition={{ duration: 1.2, ease: EASE, delay: index * 0.08 }}
+      onClick={() => setActive(a => !a)}
     >
       <img
         src={src}
-        className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105 transition-all duration-1000 ease-out"
+        className={`w-full h-full object-cover transition-all duration-700 ease-out
+          ${active
+            ? 'grayscale-0 brightness-100 scale-105'
+            : 'grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105'
+          }`}
         alt={alt}
         loading="lazy"
         decoding="async"
         width={400}
         height={280}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-bg-base/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+
+      {/* Gradient overlay */}
+      <div className={`absolute inset-0 bg-gradient-to-t from-bg-base/80 via-transparent to-transparent transition-opacity duration-500
+        ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+      />
+
+      {/* Label */}
+      <div className={`absolute bottom-4 left-4 right-4 transition-all duration-500
+        ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0'}`}
+      >
         <span className="font-label text-[10px] tracking-[0.2em] text-white/80">{label}</span>
+      </div>
+
+      {/* Tap hint on mobile (shown when NOT active) */}
+      <div className={`absolute top-3 right-3 md:hidden transition-opacity duration-300 ${active ? 'opacity-0' : 'opacity-60'}`}>
+        <span className="font-label text-[8px] tracking-widest text-white/50 bg-black/40 px-2 py-1">TAP</span>
       </div>
     </motion.div>
   );
 }
 
 export default function GallerySection() {
-  const sectionRef = useRef(null);
   const heroImgRef = useRef(null);
+  const [featureActive, setFeatureActive] = useState(false);
+
   const { scrollYProgress } = useScroll({
     target: heroImgRef,
     offset: ['start end', 'end start'],
@@ -53,7 +74,7 @@ export default function GallerySection() {
   const parallaxY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%']);
 
   return (
-    <section id="gallery" className="max-w-7xl mx-auto px-6 mb-40" ref={sectionRef} aria-label="Gallery">
+    <section id="gallery" className="max-w-7xl mx-auto px-6 mb-40" aria-label="Gallery">
       <div className="text-center mb-20">
         <motion.span
           className="font-label text-accent-primary text-[10px] tracking-[0.4em] mb-4 block"
@@ -79,11 +100,22 @@ export default function GallerySection() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[200px] md:auto-rows-[280px]">
-        {/* Feature image — 2x2 with parallax */}
-        <div ref={heroImgRef} className="col-span-2 row-span-2 overflow-hidden relative group border border-white/[0.04]">
+
+        {/* Feature image:
+            Mobile  → col-span-2, 1 row tall  (keeps grid compact, all 5 images fit)
+            Desktop → col-span-2, row-span-2  (2×2 masonry tile) */}
+        <div
+          ref={heroImgRef}
+          className="col-span-2 md:row-span-2 overflow-hidden relative group border border-white/[0.04] cursor-pointer"
+          onClick={() => setFeatureActive(a => !a)}
+        >
           <motion.img
             src={GALLERY_IMAGES[1].url}
-            className="w-full h-[120%] object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-1000"
+            className={`w-full h-[120%] object-cover transition-all duration-1000
+              ${featureActive
+                ? 'grayscale-0 brightness-100'
+                : 'grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100'
+              }`}
             alt={GALLERY_IMAGES[1].label}
             loading="lazy"
             decoding="async"
@@ -91,12 +123,20 @@ export default function GallerySection() {
             height={560}
             style={{ y: parallaxY }}
           />
-          <div className="absolute inset-x-0 bottom-0 p-8 pt-24 bg-gradient-to-t from-bg-base via-bg-base/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-            <span className="font-display text-4xl md:text-5xl text-accent-primary leading-none">{GALLERY_IMAGES[1].label}</span>
+          <div className={`absolute inset-x-0 bottom-0 p-8 pt-24 bg-gradient-to-t from-bg-base via-bg-base/60 to-transparent transition-opacity duration-700
+            ${featureActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          >
+            <span className="font-display text-4xl md:text-5xl text-accent-primary leading-none">
+              {GALLERY_IMAGES[1].label}
+            </span>
+          </div>
+          {/* Tap hint on mobile */}
+          <div className={`absolute top-3 right-3 md:hidden transition-opacity duration-300 ${featureActive ? 'opacity-0' : 'opacity-60'}`}>
+            <span className="font-label text-[8px] tracking-widest text-white/50 bg-black/40 px-2 py-1">TAP</span>
           </div>
         </div>
 
-        {/* Smaller tiles with clip-path reveal */}
+        {/* Smaller tiles */}
         {[0, 2, 3, 4].map((idx, i) => (
           <RevealImage
             key={idx}
