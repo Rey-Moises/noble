@@ -8,7 +8,6 @@ interface Props {
   children: string;
   as?: 'h1' | 'h2' | 'h3';
   className?: string;
-  /** If provided, entry animation waits for this to be true instead of inView */
   trigger?: boolean;
   delay?: number;
 }
@@ -25,9 +24,7 @@ export default function ScrambleHeading({
   const visible = trigger !== undefined ? trigger : inView;
 
   const text = children;
-  // display mirrors text.split('') — spaces stay spaces, other chars scramble
   const [display, setDisplay] = useState<string[]>(() => text.split(''));
-  // indices of chars that just settled (briefly rendered gold)
   const [gold, setGold] = useState<Set<number>>(new Set());
   const raf = useRef<number>(0);
 
@@ -36,7 +33,6 @@ export default function ScrambleHeading({
     const chars = text.split('');
     let progress = 0;
 
-    // Flash all non-space chars to random instantly
     setDisplay(chars.map(c => (c === ' ' ? ' ' : CHARS[Math.floor(Math.random() * CHARS.length)])));
 
     const tick = () => {
@@ -49,7 +45,6 @@ export default function ScrambleHeading({
         return CHARS[Math.floor(Math.random() * CHARS.length)];
       });
 
-      // Gold sweep: the last 2 chars that just settled
       const g = new Set<number>();
       chars.forEach((c, i) => {
         if (c !== ' ' && i >= floor - 2 && i < floor) g.add(i);
@@ -71,6 +66,9 @@ export default function ScrambleHeading({
 
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
 
+  // Split into words so flex-wrap never breaks mid-word
+  const words = text.split(' ');
+
   return (
     <Tag
       ref={ref as React.RefObject<HTMLHeadingElement>}
@@ -78,28 +76,39 @@ export default function ScrambleHeading({
       style={{ display: 'flex', flexWrap: 'wrap' }}
       onMouseEnter={scramble}
     >
-      {text.split('').map((char, i) =>
-        char === ' ' ? (
-          // Space: always visible, not scrambled
-          <span key={i} className="inline-block w-[0.28em]" />
-        ) : (
-          // Non-space: entry slide-up + scramble
-          <span key={i} className="overflow-hidden inline-block">
-            <motion.span
-              className="inline-block"
-              style={{
-                color: gold.has(i) ? '#C17A3A' : 'inherit',
-                transition: 'color 0.12s ease-out',
-              }}
-              initial={{ y: '110%', opacity: 0 }}
-              animate={visible ? { y: 0, opacity: 1 } : { y: '110%', opacity: 0 }}
-              transition={{ duration: 0.75, ease: EASE, delay: delay + i * 0.022 }}
-            >
-              {display[i] ?? char}
-            </motion.span>
+      {words.map((word, wi) => {
+        // flat index of first char of this word inside text.split('')
+        const flatStart = words.slice(0, wi).reduce((acc, w) => acc + w.length + 1, 0);
+
+        return (
+          <span key={wi} style={{ display: 'inline-flex' }}>
+            {word.split('').map((char, ci) => {
+              const fi = flatStart + ci; // flat index into display[]
+              return (
+                <span key={ci} className="overflow-hidden inline-block">
+                  <motion.span
+                    className="inline-block"
+                    style={{
+                      color: gold.has(fi) ? '#C17A3A' : 'inherit',
+                      transition: 'color 0.12s ease-out',
+                    }}
+                    initial={{ y: '110%', opacity: 0 }}
+                    animate={visible ? { y: 0, opacity: 1 } : { y: '110%', opacity: 0 }}
+                    transition={{ duration: 0.75, ease: EASE, delay: delay + fi * 0.022 }}
+                  >
+                    {display[fi] ?? char}
+                  </motion.span>
+                </span>
+              );
+            })}
+
+            {/* Space between words */}
+            {wi < words.length - 1 && (
+              <span className="inline-block w-[0.28em]" aria-hidden="true" />
+            )}
           </span>
-        )
-      )}
+        );
+      })}
     </Tag>
   );
 }
