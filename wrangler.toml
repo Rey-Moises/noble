@@ -1,6 +1,6 @@
-name = "noble"
-compatibility_date = "2026-05-11"
-compatibility_flags = ["nodejs_compat"]
+# wrangler.toml
+name = "noble-barbers"
+compatibility_date = "2024-05-11"
 
 [assets]
-directory = "./dist"
+directory = "dist"
