@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'motion/react';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import ScrambleHeading from './ScrambleHeading';
 import BarberPole from './BarberPole';
 
@@ -14,16 +14,25 @@ const CREW_IMAGES = [
 
 export default function CrewSection() {
   const heroRef = useRef(null);
-  const gridRef = useRef(null);
-  const gridInView = useInView(gridRef, { once: true, margin: '-80px' });
+  const [heroActive, setHeroActive] = useState(false);
+  const [activeCards, setActiveCards] = useState<Set<number>>(new Set());
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start end', 'end start'],
   });
   const heroY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
 
+  const toggleCard = (idx: number) =>
+    setActiveCards(prev => {
+      const next = new Set(prev);
+      next.has(idx) ? next.delete(idx) : next.add(idx);
+      return next;
+    });
+
   return (
     <section id="crew" className="max-w-7xl mx-auto px-6 mb-40" aria-label="Our crew">
+
       {/* Section header */}
       <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
         <div className="max-w-2xl">
@@ -61,18 +70,23 @@ export default function CrewSection() {
         </motion.div>
       </div>
 
-      {/* Main crew image with parallax */}
+      {/* Main hero image — tap-to-reveal on touch */}
       <motion.div
         ref={heroRef}
-        className="w-full aspect-[21/9] overflow-hidden border border-white/[0.04] bg-bg-surface group relative rounded-[1.5rem] shadow-2xl mb-8"
+        className="w-full aspect-[21/9] overflow-hidden border border-white/[0.04] bg-bg-surface group relative rounded-[1.5rem] shadow-2xl mb-8 cursor-pointer"
         initial={{ clipPath: 'inset(15% 5% 15% 5%)' }}
         whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
         viewport={{ once: true }}
         transition={{ duration: 1.4, ease: EASE }}
+        onClick={() => setHeroActive(a => !a)}
       >
         <motion.img
           src={CREW_IMAGES[0]}
-          className="w-full h-[120%] object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-1000 ease-out"
+          className={`w-full h-[120%] object-cover transition-all duration-1000 ease-out
+            ${heroActive
+              ? 'grayscale-0 brightness-100'
+              : 'grayscale brightness-50 group-hover:grayscale-0 group-hover:brightness-100'
+            }`}
           alt="Noble Barbers Crew"
           loading="lazy"
           decoding="async"
@@ -91,33 +105,56 @@ export default function CrewSection() {
             <p className="font-label text-[10px] tracking-[0.4em] text-accent-primary">The Noble Collective Core</p>
           </motion.div>
         </div>
+        {/* Tap hint */}
+        <div className={`absolute top-4 right-4 md:hidden transition-opacity duration-300 ${heroActive ? 'opacity-0' : 'opacity-60'}`}>
+          <span className="font-label text-[8px] tracking-widest text-white/50 bg-black/40 px-2 py-1">TAP</span>
+        </div>
       </motion.div>
 
-      {/* Grid */}
-      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {CREW_IMAGES.slice(1).map((img, idx) => (
-          <motion.div
-            key={idx}
-            className="aspect-[4/3] overflow-hidden border border-white/[0.04] bg-bg-surface group relative rounded-[1.5rem]"
-            initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
-            animate={gridInView ? { clipPath: 'inset(0% 0% 0% 0%)' } : {}}
-            transition={{ duration: 1, ease: EASE, delay: idx * 0.15 }}
-          >
-            <img
-              src={img}
-              className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-              alt={`Noble Barbers crew ${idx + 2}`}
-              loading="lazy"
-              decoding="async"
-              width={600}
-              height={450}
-            />
-            <div className="absolute inset-0 bg-accent-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-              <BarberPole className="scale-75" />
-            </div>
-          </motion.div>
-        ))}
+      {/* Grid — whileInView per card so each reveals as it scrolls in */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {CREW_IMAGES.slice(1).map((img, idx) => {
+          const active = activeCards.has(idx);
+          return (
+            <motion.div
+              key={idx}
+              className="aspect-[4/3] overflow-hidden border border-white/[0.04] bg-bg-surface group relative rounded-[1.5rem] cursor-pointer"
+              initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
+              whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+              viewport={{ once: true, margin: '120px' }}
+              transition={{ duration: 1, ease: EASE, delay: idx * 0.12 }}
+              onClick={() => toggleCard(idx)}
+            >
+              <img
+                src={img}
+                className={`w-full h-full object-cover transition-all duration-700
+                  ${active
+                    ? 'grayscale-0 brightness-100 scale-105'
+                    : 'grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-105'
+                  }`}
+                alt={`Noble Barbers crew ${idx + 2}`}
+                loading="lazy"
+                decoding="async"
+                width={600}
+                height={450}
+              />
+              {/* Accent overlay */}
+              <div className={`absolute inset-0 bg-accent-primary/10 transition-opacity pointer-events-none
+                ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+              />
+              {/* BarberPole badge */}
+              <div className={`absolute bottom-6 right-6 transition-all duration-500
+                ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0'}`}
+              >
+                <BarberPole className="scale-75" />
+              </div>
+              {/* Tap hint */}
+              <div className={`absolute top-3 right-3 md:hidden transition-opacity duration-300 ${active ? 'opacity-0' : 'opacity-60'}`}>
+                <span className="font-label text-[8px] tracking-widest text-white/50 bg-black/40 px-2 py-1">TAP</span>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       <motion.div
