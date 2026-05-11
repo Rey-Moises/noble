@@ -27,7 +27,7 @@ export default function HeroSection({ loaded, scrollToSection }: HeroSectionProp
         <ScrambleHeading
           as="h1"
           trigger={loaded}
-          className="text-[15vw] md:text-[11vw] font-display leading-[0.85] mb-6 tracking-tighter justify-center"
+          className="text-[12vw] md:text-[10vw] font-display leading-[0.85] mb-6 tracking-tighter justify-center"
         >
           BEYOND THE HAIRCUT
         </ScrambleHeading>
