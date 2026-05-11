@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { Star } from 'lucide-react';
 import ScrambleHeading from './ScrambleHeading';
+import MagneticButton from './MagneticButton';
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 
@@ -50,18 +51,22 @@ export default function HeroSection({ loaded, scrollToSection }: HeroSectionProp
           animate={loaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, ease: EASE, delay: 1.6 }}
         >
-          <button
-            onClick={() => scrollToSection('services')}
-            className="relative bg-accent-primary hover:bg-accent-hover text-white px-14 py-5 font-label tracking-[0.2em] text-sm transition-all overflow-hidden group"
-          >
-            <span className="relative z-10">EXPLORE SERVICES</span>
-            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-          </button>
+          <MagneticButton>
+            <button
+              onClick={() => scrollToSection('services')}
+              className="relative bg-accent-primary hover:bg-accent-hover text-white px-14 py-5 font-label tracking-[0.2em] text-sm transition-all overflow-hidden group"
+            >
+              <span className="relative z-10">EXPLORE SERVICES</span>
+              <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+            </button>
+          </MagneticButton>
 
-          <div className="flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-md border border-white/10">
-            <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
-            <span className="font-label text-[11px] tracking-wider">4.9 GOOGLE RATED</span>
-          </div>
+          <MagneticButton strength={0.2}>
+            <div className="flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-md border border-white/10">
+              <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
+              <span className="font-label text-[11px] tracking-wider">4.9 GOOGLE RATED</span>
+            </div>
+          </MagneticButton>
         </motion.div>
       </motion.div>
 

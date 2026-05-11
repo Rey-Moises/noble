@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 import BarberPole from './BarberPole';
+import MagneticButton from './MagneticButton';
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 const NAV_ITEMS = ['Services', 'Gallery', 'Crew', 'Locations'];
@@ -84,16 +85,17 @@ export default function Header({ isScrolled, scrollToSection }: HeaderProps) {
                 <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-accent-primary scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 origin-left" />
               </button>
             ))}
-            <a
-              href="https://noblebarberscc.setmore.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative bg-accent-primary text-white px-8 py-3 font-label text-[11px] transition-all overflow-hidden group/cta"
-              data-cursor-hover
-            >
-              <span className="relative z-10">BOOK NOW</span>
-              <div className="absolute inset-0 bg-accent-hover translate-y-full group-hover/cta:translate-y-0 transition-transform duration-400" />
-            </a>
+            <MagneticButton>
+              <a
+                href="https://noblebarberscc.setmore.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative bg-accent-primary text-white px-8 py-3 font-label text-[11px] transition-all overflow-hidden group/cta block"
+              >
+                <span className="relative z-10">BOOK NOW</span>
+                <div className="absolute inset-0 bg-accent-hover translate-y-full group-hover/cta:translate-y-0 transition-transform duration-400" />
+              </a>
+            </MagneticButton>
           </nav>
 
           <button

@@ -3,6 +3,7 @@ import { Facebook, Mail, ArrowUpRight } from 'lucide-react';
 import BarberPole from './BarberPole';
 import MarqueeText from './MarqueeText';
 import ScrambleHeading from './ScrambleHeading';
+import MagneticButton from './MagneticButton';
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 const FOOTER_LINKS = ['Home', 'Services', 'Crew', 'Locations'];
@@ -28,20 +29,21 @@ export default function Footer({ scrollToSection }: FooterProps) {
           <ScrambleHeading as="h2" className="text-6xl md:text-[10vw] font-display tracking-tighter leading-[0.85] justify-center mb-12">
             BOOK YOUR SEAT
           </ScrambleHeading>
-          <motion.a
-            href="https://noblebarberscc.setmore.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-accent-primary hover:bg-accent-hover text-white px-16 py-6 font-label tracking-[0.2em] text-sm transition-all group"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.8, ease: EASE }}
-            data-cursor-hover
-          >
-            BOOK APPOINTMENT
-            <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />
-          </motion.a>
+          <MagneticButton>
+            <motion.a
+              href="https://noblebarberscc.setmore.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-accent-primary hover:bg-accent-hover text-white px-16 py-6 font-label tracking-[0.2em] text-sm transition-all group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.8, ease: EASE }}
+            >
+              BOOK APPOINTMENT
+              <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />
+            </motion.a>
+          </MagneticButton>
         </div>
       </div>
 

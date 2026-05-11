@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import ScrambleHeading from './ScrambleHeading';
 import BarberPole from './BarberPole';
+import CursorFollower from './CursorFollower';
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 
@@ -111,7 +112,10 @@ export default function CrewSection() {
         </div>
       </motion.div>
 
-      {/* Grid — whileInView per card so each reveals as it scrolls in */}
+      {/* Grid — image follower on desktop, whileInView per card */}
+      <CursorFollower
+        images={CREW_IMAGES.slice(1).map((url, i) => ({ url, label: `Noble Crew #${i + 2}` }))}
+      >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {CREW_IMAGES.slice(1).map((img, idx) => {
           const active = activeCards.has(idx);
@@ -156,6 +160,7 @@ export default function CrewSection() {
           );
         })}
       </div>
+      </CursorFollower>
 
       <motion.div
         className="flex justify-center mt-12"

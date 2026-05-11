@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import ScrambleHeading from './ScrambleHeading';
+import CursorFollower from './CursorFollower';
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 
@@ -99,6 +100,7 @@ export default function GallerySection() {
         </motion.p>
       </div>
 
+      <CursorFollower images={GALLERY_IMAGES}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[200px] md:auto-rows-[280px]">
 
         {/* Feature image:
@@ -148,6 +150,7 @@ export default function GallerySection() {
           />
         ))}
       </div>
+      </CursorFollower>
     </section>
   );
 }

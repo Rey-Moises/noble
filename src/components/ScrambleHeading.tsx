@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, useInView } from 'motion/react';
 
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&?';
+const CHARS = 'NOBLEBARBERSHOP';
 const EASE = [0.76, 0, 0.24, 1] as const;
 
 interface Props {
