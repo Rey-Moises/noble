@@ -16,25 +16,25 @@ interface Ripple {
 const isFinePointer =
   typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches;
 
-/**
- * Desktop  → magnetic pull toward cursor (spring-based)
- * Mobile   → spring press-down + ripple from touch point
- */
-export default function MagneticButton({ children, className = '', strength = 0.32 }: Props) {
+export default function MagneticButton({ children, className = '', strength = 0.28 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
 
-  /* ── Desktop: magnetic ── */
-  const mx = useSpring(0, { stiffness: 260, damping: 22, mass: 0.5 });
-  const my = useSpring(0, { stiffness: 260, damping: 22, mass: 0.5 });
+  /* ── Desktop: slow slewed magnetic pull ── */
+  // High damping + low stiffness = lazy, buttery follow — not snappy/messy
+  const config = { stiffness: 120, damping: 28, mass: 1.2 };
+  const mx = useSpring(0, config);
+  const my = useSpring(0, config);
 
   const onMouseMove = (e: React.MouseEvent) => {
     const r = ref.current!.getBoundingClientRect();
     mx.set((e.clientX - (r.left + r.width / 2)) * strength);
     my.set((e.clientY - (r.top + r.height / 2)) * strength);
   };
-  const onMouseLeave = () => { mx.set(0); my.set(0); };
+  const onMouseEnter = () => setHovered(true);
+  const onMouseLeave = () => { mx.set(0); my.set(0); setHovered(false); };
 
-  /* ── Touch: ripple ── */
+  /* ── Touch: spring press + ripple ── */
   const [ripples, setRipples] = useState<Ripple[]>([]);
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -45,28 +45,33 @@ export default function MagneticButton({ children, className = '', strength = 0.
       ...prev,
       { id, x: touch.clientX - rect.left, y: touch.clientY - rect.top },
     ]);
-    // clean up after animation
     setTimeout(() => setRipples(prev => prev.filter(r => r.id !== id)), 700);
   };
 
-  /* ── Shared ── */
   const wrapperStyle = isFinePointer ? { x: mx, y: my } : {};
 
   return (
     <motion.div
       ref={ref}
       className={`relative inline-block overflow-hidden ${className}`}
-      style={wrapperStyle}
-      /* Touch: spring press-down on tap */
+      style={{
+        ...wrapperStyle,
+        // Drop shadow — lifts on hover
+        filter: hovered
+          ? 'drop-shadow(0 12px 32px rgba(0,0,0,0.55)) drop-shadow(0 4px 12px rgba(139,90,43,0.25))'
+          : 'drop-shadow(0 4px 16px rgba(0,0,0,0.35))',
+        transition: 'filter 0.5s ease',
+      }}
       whileTap={!isFinePointer ? { scale: 0.93 } : undefined}
       transition={{ type: 'spring', stiffness: 420, damping: 14 }}
       onMouseMove={isFinePointer ? onMouseMove : undefined}
+      onMouseEnter={isFinePointer ? onMouseEnter : undefined}
       onMouseLeave={isFinePointer ? onMouseLeave : undefined}
       onTouchStart={!isFinePointer ? onTouchStart : undefined}
     >
       {children}
 
-      {/* Ripple circles — touch only */}
+      {/* Ripple — touch only */}
       {!isFinePointer && (
         <AnimatePresence>
           {ripples.map(r => (
