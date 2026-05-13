@@ -6,11 +6,11 @@ import CursorFollower from './CursorFollower';
 const EASE = [0.76, 0, 0.24, 1] as const;
 
 const GALLERY_IMAGES = [
-  { url: '/cut-1.jpg', label: 'Precision Fade' },
-  { url: '/cut-2.jpg', label: 'Master Silhouette' },
-  { url: '/cut-3.jpg', label: 'Textured Crop' },
-  { url: '/cut-4.jpg', label: 'Sharp Contour' },
-  { url: '/cut-5.jpg', label: 'Signature Texture' },
+  { url: '/cut-1.jpg', label: 'Classic Slickback' },
+  { url: '/cut-2.jpg', label: 'Hard Part Fade' },
+  { url: '/cut-3.jpg', label: 'Pompadour Quiff' },
+  { url: '/cut-4.jpg', label: 'Textured Fringe' },
+  { url: '/cut-5.jpg', label: 'Side Sweep' },
 ];
 
 function RevealImage({ src, alt, label, index, className }: {

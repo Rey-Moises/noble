@@ -160,14 +160,16 @@ export default function CrewSection() {
             {BARBERS.map((barber, idx) => {
               const active = activeBarber.has(idx);
               return (
-                <motion.div
+                <motion.a
                   key={barber.name}
-                  className="aspect-[3/4] overflow-hidden border border-white/[0.04] bg-bg-surface group relative rounded-[1.5rem] cursor-pointer"
+                  href="https://noblebarberscc.setmore.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="aspect-[3/4] overflow-hidden border border-white/[0.04] bg-bg-surface group relative rounded-[1.5rem] cursor-pointer block"
                   initial={{ clipPath: 'inset(100% 0% 0% 0%)' }}
                   whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   viewport={{ once: true, margin: '120px' }}
                   transition={{ duration: 1, ease: EASE, delay: idx * 0.1 }}
-                  onClick={() => toggleBarber(idx)}
                 >
                   <img
                     src={barber.img}
@@ -194,11 +196,11 @@ export default function CrewSection() {
                     <BarberPole className="scale-75" />
                   </div>
 
-                  {/* Tap hint */}
-                  <div className={`absolute top-3 left-3 md:hidden transition-opacity duration-300 ${active ? 'opacity-0' : 'opacity-60'}`}>
-                    <span className="font-label text-[8px] tracking-widest text-white/50 bg-black/40 px-2 py-1">TAP</span>
+                  {/* Book hint */}
+                  <div className="absolute top-3 left-3 md:hidden opacity-60">
+                    <span className="font-label text-[8px] tracking-widest text-white/50 bg-black/40 px-2 py-1">BOOK</span>
                   </div>
-                </motion.div>
+                </motion.a>
               );
             })}
           </div>
